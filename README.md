@@ -6,6 +6,8 @@ Inference is [rembg](https://github.com/danielgatis/rembg) running ONNX models o
 
 ## Demo
 
+### People
+
 `u2net_human_seg` on a family photo. Left is the original; right is the cutout.
 
 | Before | After |
@@ -17,6 +19,18 @@ cleanbg before.jpg --model u2net_human_seg --crop --decontaminate -o after.png
 ```
 
 Photo via [Pixabay](https://pixabay.com), [Content License](https://pixabay.com/service/license-summary/).
+
+### Animals
+
+`u2net` on a cat. The rusty roof is gone; the subject stays.
+
+| Before | After |
+| --- | --- |
+| ![Cat original](docs/demo/cat-before.jpg) | ![Cat cutout](docs/demo/cat-after-preview.png) |
+
+```bash
+cleanbg cat.jpg --model u2net --crop -o cat.png
+```
 
 ## Install
 
