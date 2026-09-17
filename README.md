@@ -4,6 +4,20 @@ Local background removal for photos. The person or object stays; everything else
 
 Inference is [rembg](https://github.com/danielgatis/rembg) running ONNX models on your machine. Nothing is uploaded. This package adds a small API, a CLI, batch processing, subject crop, and optional background replacement.
 
+## Demo
+
+`u2net_human_seg` on a family photo. Left is the original; right is the cutout.
+
+| Before | After |
+| --- | --- |
+| ![Original](docs/demo/before.jpg) | ![Background removed](docs/demo/after-preview.png) |
+
+```bash
+cleanbg before.jpg --model u2net_human_seg --crop --decontaminate -o after.png
+```
+
+Photo via [Pixabay](https://pixabay.com), [Content License](https://pixabay.com/service/license-summary/).
+
 ## Install
 
 Python 3.11+.
