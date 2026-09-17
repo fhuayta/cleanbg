@@ -1,0 +1,6 @@
+test:
+  image: python:3.12-slim
+  before_script:
+    - pip install pytest pillow
+  script:
+    - PYTHONPATH=src pytest -q
