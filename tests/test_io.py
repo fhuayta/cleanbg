@@ -1,3 +1,4 @@
+from io import BytesIO
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,26 @@ def test_load_image_from_path(tmp_path: Path) -> None:
     path = tmp_path / "photo.png"
     Image.new("RGB", (8, 8), "red").save(path)
     assert load_image(path).size == (8, 8)
+
+
+def test_load_image_applies_exif_orientation(tmp_path: Path) -> None:
+    path = tmp_path / "rotated.jpg"
+    image = Image.new("RGB", (20, 10), "navy")
+    exif = image.getexif()
+    exif[274] = 6  # rotate 90° CW
+    image.save(path, exif=exif)
+    loaded = load_image(path)
+    assert loaded.size == (10, 20)
+
+
+def test_load_image_bytes_apply_exif_orientation() -> None:
+    image = Image.new("RGB", (20, 10), "navy")
+    exif = image.getexif()
+    exif[274] = 6
+    buf = BytesIO()
+    image.save(buf, format="JPEG", exif=exif)
+    loaded = load_image(buf.getvalue())
+    assert loaded.size == (10, 20)
 
 
 def test_load_image_missing_file(tmp_path: Path) -> None:

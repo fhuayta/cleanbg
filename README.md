@@ -113,6 +113,12 @@ remove_background(
 
 Weights are downloaded by rembg and keep their own licenses. This repo is MIT; check the model before you ship a product.
 
+## How it works
+
+Segmentation, not a chatbot. `cleanbg` is a thin Python API over [rembg](https://github.com/danielgatis/rembg): it loads a U²-Net / ISNet ONNX checkpoint once, labels each pixel as subject or background, and writes a transparent PNG. Inference runs on your CPU (or GPU with `.[gpu]`). Nothing is uploaded.
+
+Phone JPEGs are rotated from EXIF before inference so portraits do not come out sideways.
+
 Copy-paste recipes: [USAGE.md](USAGE.md). Runnable scripts live in `examples/`.
 
 ## License

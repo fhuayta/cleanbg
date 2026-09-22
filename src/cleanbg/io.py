@@ -4,7 +4,7 @@ from io import BytesIO
 from pathlib import Path
 from typing import BinaryIO
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 from cleanbg.exceptions import OutputError, UnsupportedInputError
 
@@ -22,19 +22,24 @@ IMAGE_EXTENSIONS = {
 }
 
 
+def _finalize(image: Image.Image) -> Image.Image:
+    image.load()
+    # Phone photos store rotation in EXIF; without this the cutout comes out sideways.
+    oriented = ImageOps.exif_transpose(image)
+    return (oriented or image).copy()
+
+
 def load_image(source: ImageSource) -> Image.Image:
     if isinstance(source, Image.Image):
         return source.copy()
 
     if isinstance(source, (bytes, bytearray)):
         with Image.open(BytesIO(source)) as image:
-            image.load()
-            return image.copy()
+            return _finalize(image)
 
     if hasattr(source, "read"):
         opened = Image.open(source)
-        opened.load()
-        return opened
+        return _finalize(opened)
 
     path = Path(source)
     if not path.is_file():
@@ -45,8 +50,7 @@ def load_image(source: ImageSource) -> Image.Image:
             f"expected {', '.join(sorted(IMAGE_EXTENSIONS))}"
         )
     with Image.open(path) as image:
-        image.load()
-        return image.copy()
+        return _finalize(image)
 
 
 def list_images(source: str | Path, *, recursive: bool = False) -> list[Path]:
